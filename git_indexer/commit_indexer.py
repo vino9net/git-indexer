@@ -23,15 +23,16 @@ GITLAB_TIMETSAMP_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
 #
 # notes about timezone handling (TODO: proof read)
 #
-#  1. For uniformity, we use timezone.utc for all datetime objects, which means some conversion is needed here
+#  1. For uniformity, we use timezone.utc for all datetime objects, which means
+#     some conversion is needed here
 #  2. Github APIs returns native datetime object and the timezone is assumed to be in UTC
 #  3. Gitlab APIs returns timetime as stringm with "Z" at the end, also in UTC
-#  4. In model Repository, last_commit_at and last_indexed_at are in UTC. the commiter_date from a Git commit
-#     is converted to UTC before saving to database
+#  4. In model Repository, last_commit_at and last_indexed_at are in UTC.
+#     the commiter_date from a Git commit is converted to UTC before saving to database
 #
 
 
-def index_commits(
+def index_commits(  # noqa C901
     session: Session,
     clone_url: str,
     local_repo_path: str,
@@ -76,9 +77,11 @@ def index_commits(
             include_remotes=True,
             since=index_since,
         ).traverse_commits():
-            # impose some timeout to avoid spending tons of time on very large repositories
+            # impose some timeout to avoid spending tons of time on very large repos
             if (datetime.now() - start_t).seconds > timeout:  # pragma: no cover
-                logger.warning(f"### indexing not done after {timeout} seconds, aborting {log_url}")
+                logger.warning(
+                    f"### indexing not done after {timeout} seconds, aborting {log_url}"
+                )
                 break
 
             if git_commit.hash not in old_commits:
@@ -127,7 +130,9 @@ def _new_commit_(session: Session, git_commit: PyDrillerCommit) -> Commit:
 
     commit = Commit(
         sha=git_commit.hash,
-        message=git_commit.msg[:2048],  # some commits has super long message, e.g. squash merge
+        message=git_commit.msg[
+            :2048
+        ],  # some commits has super long message, e.g. squash merge
         author=author,
         is_merge=git_commit.merge,
         n_lines=git_commit.lines,
@@ -135,7 +140,9 @@ def _new_commit_(session: Session, git_commit: PyDrillerCommit) -> Commit:
         n_insertions=git_commit.insertions,
         n_deletions=git_commit.deletions,
         created_at_tz=git_commit.committer_date,
-        created_at=git_commit.committer_date.astimezone(timezone.utc).replace(tzinfo=None),
+        created_at=git_commit.committer_date.astimezone(timezone.utc).replace(
+            tzinfo=None
+        ),
     )
 
     n_lines_changed, n_lines_ignored, n_files_changed, n_files_ignored = 0, 0, 0, 0
@@ -146,7 +153,9 @@ def _new_commit_(session: Session, git_commit: PyDrillerCommit) -> Commit:
 
         new_file = CommittedFile(
             commit_sha=git_commit.hash,
-            change_type=str(mod.change_type).split(".")[1],  # enum ModificationType.ADD => "ADD"
+            change_type=str(mod.change_type).split(".")[
+                1
+            ],  # enum ModificationType.ADD => "ADD"
             file_path=file_path,
             file_name=mod.filename,
             n_lines_added=mod.added_lines,

@@ -20,12 +20,18 @@ def run(command: str) -> bool:
         logger.debug(f"{process.stdout}")
         return True
     else:
-        logger.warning(f"{command} returned code {process.returncode}. ouptput=\n{process.stdout}")
+        logger.warning(
+            f"{command} returned code {process.returncode}. ouptput=\n{process.stdout}"
+        )
         return False
 
 
 def mirror_repo(
-    clone_url: str, repo_source: str, is_private_repo: bool, dest_path: str, overwrite: bool = False
+    clone_url: str,
+    repo_source: str,
+    is_private_repo: bool,
+    dest_path: str,
+    overwrite: bool = False,
 ) -> tuple[str | None, bool]:
     """
     create a local mirror (as a bare repo) of a remote repo
@@ -55,7 +61,9 @@ def mirror_repo(
 
         elif os.path.isdir(repo_dir) and overwrite:
             # mirror directory exists but not a git repo. we overwrite it
-            logger.info(f"{repo_dir} exists but is not a bare git repo, removing all contents")
+            logger.info(
+                f"{repo_dir} exists but is not a bare git repo, removing all contents"
+            )
             run(f"rm -rf {repo_dir}")
         else:
             # repo_dir does not exist, create it.

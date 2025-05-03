@@ -14,7 +14,7 @@ from loguru import logger
 # towards commit stats
 _IGNORE_PATTERNS_ = [
     re.compile(
-        "^(vendor|Pods|target|YoutuOCWrapper|vos-app-protection|vos-processor|\\.idea|\\.vscode)/."  # noqa: E501
+        "^(vendor|Pods|target|YoutuOCWrapper|vos-app-protection|vos-processor|\\.idea|\\.vscode)/."
     ),
     re.compile("^[a-zA-Z0-9_]*?/Pods/"),
     re.compile("^.*(xcodeproj|xcworkspace)/."),
@@ -48,7 +48,9 @@ def __shorten__(path: str, max_lenght: int) -> str:
 
 
 def display_url(clone_url: str, max_length: int = 64) -> str:
-    url = re.sub(r"https?://[^\/]+", "", clone_url)  # remove http(s)://host portion of the url
+    url = re.sub(
+        r"https?://[^\/]+", "", clone_url
+    )  # remove http(s)://host portion of the url
     url = re.sub(r"git@.*:", "", url)  # remove the git@host: portion of the url
     url = __shorten__(url, max_length)
     return re.sub(r".git$", "", url)
@@ -78,7 +80,9 @@ def clone_url2mirror_path(clone_url: str, dest_path: str) -> str:
     else:
         # treat clone_url as a local repo
         full_path = pathlib.PurePath(clone_url)
-        path = full_path.parents[0].name + "/" + full_path.name  # the parent directory of clone_url
+        path = (
+            full_path.parents[0].name + "/" + full_path.name
+        )  # the parent directory of clone_url
 
     if not path.endswith(".git"):
         path = path + ".git"

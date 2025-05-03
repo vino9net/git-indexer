@@ -66,7 +66,7 @@ def parse_options(argv):
     return ns
 
 
-def handle_options(options: argparse.Namespace, engine: Engine) -> None:
+def handle_options(options: argparse.Namespace, engine: Engine) -> None:  # noqa C901
     logger.info(f"started command with: {options}")
 
     if options.source == "gitlab":

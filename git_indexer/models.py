@@ -27,7 +27,7 @@ repo_to_commit_table = Table(
 class Author(Base):
     __tablename__ = "gi_authors"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)  # noqa: A003, VNE003
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)  # noqa: A003
     name: Mapped[str] = mapped_column(String(128))
     email: Mapped[str] = mapped_column(String(1024), unique=True)
     company: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
@@ -36,7 +36,9 @@ class Author(Base):
     login_name: Mapped[Optional[str]] = mapped_column(String(128), nullable=True)
 
     parent_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("gi_authors.id"))
-    parent: Mapped[Optional["Author"]] = relationship("Author", remote_side=[id], backref="aliases")
+    parent: Mapped[Optional["Author"]] = relationship(
+        "Author", remote_side=[id], backref="aliases"
+    )
 
     commits: Mapped[list["Commit"]] = relationship("Commit", back_populates="author")
 
@@ -61,9 +63,13 @@ class Repository(Base):
     last_indexed_at: Mapped[Optional[DateTime]] = mapped_column(DateTime, nullable=True)
     last_commit_at: Mapped[Optional[DateTime]] = mapped_column(DateTime, nullable=True)
 
-    commits: Mapped[list["Commit"]] = relationship(secondary=repo_to_commit_table, back_populates="repos")
+    commits: Mapped[list["Commit"]] = relationship(
+        secondary=repo_to_commit_table, back_populates="repos"
+    )
 
-    merge_requests: Mapped[list["MergeRequest"]] = relationship("MergeRequest", back_populates="repo")
+    merge_requests: Mapped[list["MergeRequest"]] = relationship(
+        "MergeRequest", back_populates="repo"
+    )
 
     @property
     def browse_url(self) -> str:
@@ -120,9 +126,13 @@ class Commit(Base):
     author_id: Mapped[int] = mapped_column(Integer, ForeignKey("gi_authors.id"))
     author: Mapped[Author] = relationship("Author", back_populates="commits")
 
-    repos: Mapped[list["Repository"]] = relationship(secondary=repo_to_commit_table, back_populates="commits")
+    repos: Mapped[list["Repository"]] = relationship(
+        secondary=repo_to_commit_table, back_populates="commits"
+    )
 
-    files: Mapped[list["CommittedFile"]] = relationship("CommittedFile", back_populates="commit")
+    files: Mapped[list["CommittedFile"]] = relationship(
+        "CommittedFile", back_populates="commit"
+    )
 
     def __str__(self) -> str:
         return f"Commit(id={self.sha})"
@@ -192,7 +202,11 @@ class MergeRequest(Base):
 
 
 def ensure_repository(session: Session, clone_url: str, repo_type: str) -> Repository:
-    repo = session.query(Repository).filter_by(clone_url=clone_url, repo_type=repo_type).first()
+    repo = (
+        session.query(Repository)
+        .filter_by(clone_url=clone_url, repo_type=repo_type)
+        .first()
+    )
     if repo is None:
         repo_name = clone_url.split("/")[-1].replace(".git", "")
         repo = Repository(clone_url=clone_url, repo_type=repo_type, repo_name=repo_name)

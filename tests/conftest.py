@@ -160,7 +160,9 @@ def sql_engine(tmp_path_factory):
 
     yield sql_engine
 
-    if test_db_url.startswith("postgres") and os.environ.get("KEEP_TEST_DB", "").upper() not in ["1", "Y"]:
+    if test_db_url.startswith("postgres") and os.environ.get(
+        "KEEP_TEST_DB", ""
+    ).upper() not in ["1", "Y"]:
         logger.info(f"dropping test database {test_db_url}")
         drop_database(test_db_url)
 

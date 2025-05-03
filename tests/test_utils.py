@@ -52,7 +52,9 @@ def test_ignore_patterns():
     # Next.js build
     assert should_exclude_from_stats("someapp/.next/_app.js")
     assert should_exclude_from_stats("webretail/.next/static/chunks/pages/_app.js")
-    assert should_exclude_from_stats("webretail/.next/static/webpack/pages/indexupdate.js")
+    assert should_exclude_from_stats(
+        "webretail/.next/static/webpack/pages/indexupdate.js"
+    )
     assert should_exclude_from_stats("webretail/.next/server/pages/_document.js")
     assert should_exclude_from_stats("common/assets/Styling/_mixins.scss")
 
@@ -84,8 +86,13 @@ def test_ignore_patterns():
 
 
 def test_match_any():
-    assert match_any("/Users/lee/tmp/shared/bbx/company/bbx-cookiecutter-springboot3.git", "*/bbx/*/bbx*")
-    assert not match_any("/Users/lee/tmp/shared/bbx/cookiecutter-springboot3.git", "*/bbx/bbx*")
+    assert match_any(
+        "/Users/lee/tmp/shared/bbx/company/bbx-cookiecutter-springboot3.git",
+        "*/bbx/*/bbx*",
+    )
+    assert not match_any(
+        "/Users/lee/tmp/shared/bbx/cookiecutter-springboot3.git", "*/bbx/bbx*"
+    )
 
 
 def test_display_url():
@@ -99,7 +106,9 @@ def test_display_url():
     assert display_url("https://github.com/sloppy_coder/xyz.git") == "/sloppy_coder/xyz"
 
     assert (
-        display_url("git@gitlab.com:securemyphbank/rtd/pro/local-payment-service-chart.git", 64)
+        display_url(
+            "git@gitlab.com:securemyphbank/rtd/pro/local-payment-service-chart.git", 64
+        )
         == "securemyphbank/rtd/pro/local-payment-service-chart"
     )
 
@@ -107,8 +116,8 @@ def test_display_url():
 def test_gitlab_ts_to_datetime():
     assert gitlab_ts_to_datetime(None) is None
     dt = gitlab_ts_to_datetime("2021-08-31T09:00:00.000Z")
-    assert (dt.year, dt.month, dt.second) == (2021, 8, 0)
-    assert dt.tzinfo.tzname(dt) == "UTC"
+    assert dt and (dt.year, dt.month, dt.second) == (2021, 8, 0)
+    assert dt and dt.tzinfo and dt.tzinfo.tzname(dt) == "UTC"
 
 
 def test_clone_url2mirror_path():
@@ -127,18 +136,26 @@ def test_clone_url2mirror_path():
     assert ("some_path/parent_dir/project/repo1.git") == clone_url2mirror_path(
         "project/repo1.git", "some_path/parent_dir"
     )
-    assert ("/parent_dir/project/repo1.git") == clone_url2mirror_path("/home/git/project/repo1.git", "/parent_dir")
+    assert "/parent_dir/project/repo1.git" == clone_url2mirror_path(
+        "/home/git/project/repo1.git", "/parent_dir"
+    )
 
 
-@pytest.mark.skipif(os.environ.get("GITLAB_TOKEN") is None, reason="gitlab token not available")
-@pytest.mark.skipif(os.environ.get("OFFLINE_MODE") == "1", reason="running in offline mode")
+@pytest.mark.skipif(
+    os.environ.get("GITLAB_TOKEN") is None, reason="gitlab token not available"
+)
+@pytest.mark.skipif(
+    os.environ.get("OFFLINE_MODE") == "1", reason="running in offline mode"
+)
 def test_enumerate_gitlab_repos():
     repos = list(enumerate_gitlab_repos("hello-api"))
     assert len(repos) > 0
     assert list(repos)[0][1].visibility is not None
 
 
-@pytest.mark.skipif(os.environ.get("OFFLINE_MODE") == "1", reason="running in offline mode")
+@pytest.mark.skipif(
+    os.environ.get("OFFLINE_MODE") == "1", reason="running in offline mode"
+)
 def test_enumerate_github_repos():
     repos = list(enumerate_github_repos("sloppycoder/hello"))
     assert len(repos) > 0
@@ -149,8 +166,16 @@ def test_enumerate_from_file(mytest_dir):
     repos = list(enumberate_from_file(f"{mytest_dir}/data/test.lst"))
     assert len(repos) == 2
 
-    repo1 = list(repos[0])[1]
-    assert repo1["is_remote"] is True and repo1["repo_source"] == "gitlab" and repo1["is_private"] is True
+    repo1: dict = list(repos[0])[1]  # pyright: ignore
+    assert (
+        repo1["is_remote"] is True
+        and repo1["repo_source"] == "gitlab"
+        and repo1["is_private"] is True
+    )
 
-    repo2 = list(repos[1])[1]
-    assert repo2["is_remote"] is True and repo2["repo_source"] == "github" and repo2["is_private"] is False
+    repo2: dict = list(repos[1])[1]  # pyright: ignore
+    assert (
+        repo2["is_remote"] is True
+        and repo2["repo_source"] == "github"
+        and repo2["is_private"] is False
+    )

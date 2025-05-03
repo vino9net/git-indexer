@@ -12,7 +12,9 @@ from git_indexer.models import MergeRequest, Repository, ensure_repository
 from git_indexer.utils import display_url, gitlab_ts_to_datetime
 
 
-def create_new_request(session: Session, obj_from_api: Any, repo: Repository) -> MergeRequest:
+def create_new_request(
+    session: Session, obj_from_api: Any, repo: Repository
+) -> MergeRequest:
     if repo.repo_type == "github":
         # TODO: pr.created_at is a naive datetime object, timezone is assumed to be UTC
         pr = obj_from_api
@@ -23,7 +25,8 @@ def create_new_request(session: Session, obj_from_api: Any, repo: Repository) ->
             state=obj_from_api.state,
             source_branch=pr.head.ref,
             target_branch=pr.base.ref,
-            source_sha=pr.head.sha,  # does this value change when new commits are added to source branch?
+            # does this value change when new commits are added to source branch?
+            source_sha=pr.head.sha,
             merge_sha=pr.merge_commit_sha,
             created_at=pr.created_at,
             merged_at=pr.merged_at,
@@ -65,7 +68,9 @@ def create_new_request(session: Session, obj_from_api: Any, repo: Repository) ->
     return request
 
 
-def requests_to_index(repo_type: str, project: gl_projects.Project | github_repo.Repository):
+def requests_to_index(
+    repo_type: str, project: gl_projects.Project | github_repo.Repository
+):
     if repo_type == "github":
         return project.get_pulls(state="closed")
     elif repo_type == "gitlab":
@@ -75,8 +80,10 @@ def requests_to_index(repo_type: str, project: gl_projects.Project | github_repo
         raise ValueError(f"unknown repo_type {repo_type}")
 
 
-def index_merge_requests(
-    session: Session, repo_type: str, project: gl_projects.Project | github_repo.Repository
+def index_merge_requests(  # noqa: C901
+    session: Session,
+    repo_type: str,
+    project: gl_projects.Project | github_repo.Repository,
 ) -> int:
     n_requests = 0
 
@@ -107,7 +114,11 @@ def index_merge_requests(
             else:
                 req_id = str(req.number)
 
-            db_obj = session.query(MergeRequest).filter_by(request_id=req_id, repo=repo).first()
+            db_obj = (
+                session.query(MergeRequest)
+                .filter_by(request_id=req_id, repo=repo)
+                .first()
+            )
             if db_obj is None:
                 create_new_request(session, req, repo)
                 n_requests += 1

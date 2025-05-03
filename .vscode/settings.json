@@ -1,5 +1,9 @@
 {
     "python.defaultInterpreterPath": ".venv/bin/python",
+    "python.testing.pytestEnabled": true,
+    "python.testing.pytestArgs": [
+        "-s"
+    ],
     "python.envFile": "${workspaceFolder}/.env",
     "[python]": {
         "editor.formatOnSave": true,
@@ -7,19 +11,8 @@
             "source.organizeImports": "explicit",
             "source.fixAll": "explicit"
         },
-        "editor.defaultFormatter": "ms-python.black-formatter"
+        "editor.defaultFormatter": "charliermarsh.ruff"
     },
-    "flake8.args": [
-        "--config=.flake8"
-    ],
-    "flake8.ignorePatterns": [
-        ".venv/**/*.py"
-    ],
-    "mypy-type-checker.preferDaemon": true,
-    "python.testing.pytestEnabled": true,
-    "python.testing.pytestPath": "tests",
-    "python.testing.unittestEnabled": false,
-    "python.testing.pytestArgs": [
-        "tests"
-    ],
+    "debugpy.debugJustMyCode": true,
 }
+~

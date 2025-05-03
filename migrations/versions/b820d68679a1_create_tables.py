@@ -1,15 +1,15 @@
 """create tables
 
 Revision ID: b820d68679a1
-Revises: 
+Revises:
 Create Date: 2023-12-11 01:48:52.104764
 
 """
+
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
-
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = "b820d68679a1"

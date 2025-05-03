@@ -132,7 +132,12 @@ def search_commits(mode: str, query: str):
                 result["commits"] = commits
 
         elif mode == "repo":
-            repos = session.query(Repository).filter(Repository.clone_url.like(f"%{query}%")).limit(__MAX_ITEMS__).all()
+            repos = (
+                session.query(Repository)
+                .filter(Repository.clone_url.like(f"%{query}%"))
+                .limit(__MAX_ITEMS__)
+                .all()
+            )
             result = {"repos": repos}
             if len(repos) == 1:
                 commits = (
