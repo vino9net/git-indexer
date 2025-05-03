@@ -320,7 +320,7 @@ requires-dist = [
     { name = "gunicorn", specifier = ">=21.2.0" },
     { name = "loguru", specifier = ">=0.7.2" },
     { name = "psycopg", extras = ["binary", "pool"], specifier = ">=3.1.14" },
-    { name = "pydriller", specifier = ">=2.6" },
+    { name = "pydriller", specifier = "==2.6" },
     { name = "pygithub", specifier = ">=2.1.1" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "python-gitlab", specifier = ">=4.2.0" },
@@ -668,7 +668,7 @@ wheels = [
 
 [[package]]
 name = "pydriller"
-version = "2.7"
+version = "2.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "gitpython" },
@@ -676,9 +676,8 @@ dependencies = [
     { name = "pytz" },
     { name = "types-pytz" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/3a/89/df4a8fb7d2b92826977b40d1bb8461fb4160d07910218218682a82e25568/pydriller-2.7.tar.gz", hash = "sha256:cd7d86899746f452c0ea2e5d3b220431a1ab2f2048b01e4dc812ef718865d2b7", size = 44058, upload-time = "2024-10-31T10:05:55.357Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e0/4b/e0c6bb2a85cbbc095413beccb3f83667b03e9d4fbaa06ff42115a252efda/PyDriller-2.7-py3-none-any.whl", hash = "sha256:3eb6a3c5322937da0e5c940d7734a9519cf0b940af432f488187c96d6110864d", size = 36279, upload-time = "2024-10-31T10:05:52.689Z" },
+    { url = "https://files.pythonhosted.org/packages/85/5e/d7f5e3fc06c4caa693d785b1372de42bd7f31aab5e3b1c383f9c4f5ce9ae/PyDriller-2.6-py3-none-any.whl", hash = "sha256:4a27f76081a5864a03c562db3c2a8f47afa721b5b190131396bf477125cd967e", size = 33752, upload-time = "2023-11-19T11:52:06.504Z" },
 ]
 
 [[package]]

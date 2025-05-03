@@ -16,7 +16,7 @@ dependencies = [
     "loguru >= 0.7.2",
     "python-gitlab >= 4.2.0",
     "pygithub >= 2.1.1",
-    "pydriller >= 2.6",
+    "pydriller==2.6",
     "sqlalchemy-utils >= 0.41.1",
     "flask >= 2.3.3",
     "flask-wtf >= 1.2.1",
